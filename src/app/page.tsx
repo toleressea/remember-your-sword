@@ -76,6 +76,7 @@ const Home = () => {
 
   const colorWord = (word: string, index: number) => {
     let actualWords = actualText.split(" ");
+    if (index >= actualWords.length) return "text-red-500";
     return word.toLowerCase() === actualWords[index].toLowerCase()
       ? "text-green-600"
       : actualWords[index].toLowerCase().includes(word.toLowerCase())
