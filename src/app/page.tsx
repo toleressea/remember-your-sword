@@ -49,26 +49,32 @@ const Home = () => {
     setUserText(actualText);
   };
 
-  const replaceWord = () => {
+  const revertToActual = (addNext: boolean) => {
     if (!actualText) return;
 
     // split the current response into words
     let actualWords = actualText.split(" ");
 
-    if (userText) {
-      // split the user input into words
-      let userInputWords = userText.split(" ");
+    if (!userText) {
+      if (addNext) setUserText(actualWords[0]);
+      return;
+    }
 
-      // replace the current word with the correct word from the 'response' array
-      let userWord = userInputWords[userInputWords.length - 1];
-      let actualWord = actualWords[userInputWords.length - 1];
-      if (userWord == actualWord)
-        userInputWords.push(actualWords[userInputWords.length]);
-      else userInputWords[userInputWords.length - 1] = actualWord;
+    // split the user input into words
+    let userInputWords = userText.split(" ");
+    userInputWords = userInputWords.map((userWord: string, i: number) => {
+      let actualWord = actualWords[i];
+      if (userWord.toLowerCase() == actualWord.toLowerCase()) {
+        return userWord;
+      } else {
+        return "";
+      }
+    }).filter((word: string) => word != "");
 
-      setUserText(userInputWords.join(" ") + " ");
-    } else setUserText(actualWords[0] + " ");
-  };
+    if (addNext) userInputWords.push(actualWords[userInputWords.length]);
+
+    setUserText(userInputWords.join(" "));
+  }
 
   const checkText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUserText(event.target.value);
@@ -147,7 +153,7 @@ const Home = () => {
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 event.preventDefault();
-                replaceWord();
+                revertToActual(true);
               }
             }}
             value={userText}
