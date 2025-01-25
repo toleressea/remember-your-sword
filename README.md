@@ -25,10 +25,10 @@ bun dev
 ### Via Docker
 
 ```bash
-docker build -t membible:latest .
-docker run --rm -p 8001:8001 membible:latest
+docker build -t remember-your-sword:latest .
+docker run --rm -p 8001:8001 remember-your-sword:latest
 ```
 
 ## Usage
 
-Open [http://localhost:8001](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:8001](http://localhost:8001) with your browser to see the result.
