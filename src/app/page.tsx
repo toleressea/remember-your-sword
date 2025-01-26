@@ -575,7 +575,7 @@ const Home = () => {
         {getColoredWords().map((item, index) => (
             <React.Fragment key={index}>
                 <span className={item.color}>{item.word}</span>
-                {index < getColoredWords().length - 1 && " "}
+                {userText && index < userText.split(" ").length - 1 && " "}
             </React.Fragment>
         ))}
     </div>
