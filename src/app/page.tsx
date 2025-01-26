@@ -393,12 +393,22 @@ const Home = () => {
                 <label htmlFor="verseInput" className="text-base font-medium text-gray-700">
                   Type the verse from memory:
                 </label>
-                <button
-                  onClick={populateActual}
-                  className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  Show Full Text
-                </button>
+                <div className="space-x-4">
+                  <button
+                    onClick={() => revertToActual(true)}
+                    className="text-sm text-blue-600 hover:text-blue-700 hover:underline inline-flex items-center gap-1"
+                    title="Press Enter for the next word"
+                  >
+                    Help Me
+                    <span className="text-gray-500 text-xs border border-gray-300 rounded px-1">⏎</span>
+                  </button>
+                  <button
+                    onClick={populateActual}
+                    className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                  >
+                    Show Full Text
+                  </button>
+                </div>
               </div>
               <div className="relative">
                 <textarea
