@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect, useRef } from "react";
 import Drawer from "./components/Drawer";
 import Settings from "./components/Settings";
 
@@ -85,6 +85,7 @@ const Home = () => {
   const [translation, setTranslation] = useState<string>("NKJV");
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
+  const verseInputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     // Remove fetchBible call since we'll fetch directly when needed
@@ -203,6 +204,10 @@ const Home = () => {
         const cleanedText = cleanText(combinedText);
         setActualText(cleanedText);
         setStatus(`Text from ${bibleRef.toUpperCase()} (${translation}) loaded`);
+        // Focus the verse input after loading
+        setTimeout(() => {
+          verseInputRef.current?.focus();
+        }, 100);
       } else {
         setStatus("No text found for this reference");
       }
@@ -413,6 +418,7 @@ const Home = () => {
               <div className="relative">
                 <textarea
                   id="verseInput"
+                  ref={verseInputRef}
                   value={userText}
                   onChange={checkText}
                   onScroll={handleScroll}
