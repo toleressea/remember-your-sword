@@ -76,16 +76,62 @@ const combineVerses = (verses: BibleVerse[], selectedVerses?: number[]): string 
     .join(' ');
 };
 
+const useLocalStorage = <T,>(key: string, initialValue: T): [T, (value: T) => void] => {
+  // State to store our value
+  // Pass initial state function to useState so logic is only executed once
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    try {
+      if (typeof window === 'undefined') {
+        return initialValue;
+      }
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.log(error);
+      return initialValue;
+    }
+  });
+
+  // Return a wrapped version of useState's setter function that ...
+  // ... persists the new value to localStorage.
+  const setValue = (value: T) => {
+    try {
+      // Allow value to be a function so we have same API as useState
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return [storedValue, setValue];
+};
+
 const Home = () => {
   const [bibleRef, setBibleRef] = useState<string>("");
   const [actualText, setActualText] = useState<string>("");
   const [status, setStatus] = useState<string>("No text loaded.");
   const [userText, setUserText] = useState<string>("");
   const [isCommuter, setIsCommuter] = useState<boolean>(false);
-  const [translation, setTranslation] = useState<string>("NKJV");
+  const [translation, setTranslation] = useLocalStorage<string>('preferredTranslation', 'NKJV');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [hasHydrated, setHasHydrated] = useState(false);
   const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
   const verseInputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Handle hydration and localStorage
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hasHydrated) {
+      setTranslation(translation);
+    }
+  }, [translation, hasHydrated]);
 
   useEffect(() => {
     // Remove fetchBible call since we'll fetch directly when needed
