@@ -121,6 +121,7 @@ const Home = () => {
   const [mistakeCount, setMistakeCount] = useState(0);
   const [lastCheckedLength, setLastCheckedLength] = useState(0);
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [helpCounter, setHelpCounter] = useState(0);
   const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
   const verseInputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -274,6 +275,11 @@ const Home = () => {
   const revertToActual = (help: boolean) => {
     if (!actualText) return;
     
+    // Increment the help counter if help is true
+    if (help) {
+      setHelpCounter(prev => prev + 1);
+    }
+
     // split the current response into words
     const actualWords = cleanText(actualText).split(" ");
     
@@ -531,6 +537,12 @@ const Home = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                       {mistakeCount}
+                    </div>
+                    <div className="text-blue-600 tabular-nums flex items-center gap-1" title="Number of times help was used">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-4.42-2.79-8.59-7-9.719z" />
+                      </svg>
+                      {helpCounter}
                     </div>
                   </div>
                 </div>
