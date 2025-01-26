@@ -5,7 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MemBible",
+  title: "Remember Your Sword",
+  description: "A Bible memory app",
 };
 
 export default function RootLayout({
