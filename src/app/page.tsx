@@ -444,8 +444,16 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="text-base text-gray-600">
-              Status: {status}
+            <div className="text-base text-gray-600 flex items-center justify-between">
+              <div>Status: {status}</div>
+              <a 
+                href="https://bolls.life/api/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-sm text-gray-400 hover:text-gray-600 hover:underline"
+              >
+                Bible text via bolls.life
+              </a>
             </div>
           </div>
         )}
