@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, ChangeEvent, useEffect } from "react";
+import Drawer from "./components/Drawer";
+import Settings from "./components/Settings";
 
 interface BibleVerse {
   pk: number;
@@ -81,10 +83,8 @@ const Home = () => {
   const [userText, setUserText] = useState<string>("");
   const [isCommuter, setIsCommuter] = useState<boolean>(false);
   const [translation, setTranslation] = useState<string>("ESV");
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
-
-  // const [fail, setFail] = useState<boolean>(false);
-  // const failSound = new Audio('/fail.mp3');
 
   useEffect(() => {
     // Remove fetchBible call since we'll fetch directly when needed
@@ -106,11 +106,6 @@ const Home = () => {
     }
   }, [userText])
 
-  // useEffect(() => {
-  //   if (fail) failSound.play();
-  // }, [fail])
-
-  // Book name to ID mapping for bolls.life API
   const bookIds: { [key: string]: number } = {
     "GENESIS": 1, "GEN": 1,
     "EXODUS": 2, "EXO": 2,
@@ -218,36 +213,44 @@ const Home = () => {
     setUserText(actualText);
   };
 
-  const revertToActual = (addNext: boolean) => {
+  const revertToActual = (help: boolean) => {
     if (!actualText) return;
-
+    
     // split the current response into words
-    let actualWords = actualText.split(" ");
+    const actualWords = cleanText(actualText).split(" ");
+    
+    // Only show help if we haven't completed the verse
+    if (userText) {
+      const userWords = cleanText(userText).split(" ");
+      if (userWords.length >= actualWords.length) {
+        return;
+      }
+    }
 
     if (!userText) {
-      if (addNext) setUserText(actualWords[0]);
+      if (help) setUserText(actualWords[0]);
       return;
     }
 
-    // split the user input into words
+    // find the first word that doesn't match
     let userInputWords = cleanText(userText).split(" ");
     let i = 0;
-    while (i < userInputWords.length && userInputWords[i].toLowerCase() == actualWords[i].toLowerCase() && i < actualWords.length) {
+    while (i < userInputWords.length && userInputWords[i] === actualWords[i]) {
       i++;
     }
     userInputWords = userInputWords.slice(0, i);
     
-    if (addNext) {
+    if (help) {
       const nextWord = actualWords[userInputWords.length];
       if (isCommuter) {
         let msg = new SpeechSynthesisUtterance();
         msg.text = nextWord;
         window.speechSynthesis.speak(msg);
       }
-      userInputWords.push(nextWord);
+      setUserText(userInputWords.concat([nextWord]).join(" "));
+    } else {
+      setUserText(userInputWords.join(" "));
     }
-
-    setUserText(userInputWords.join(" "));
   }
 
   const checkText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -283,144 +286,142 @@ const Home = () => {
   };
 
   return (
-      <div
-          className="p-4 bg-blue-100 rounded-lg shadow-md m-auto max-w-xl"
-          style={{ marginTop: "16px" }}
-      >
-        <h3 className="p-4" style={{ color: "black", textAlign: "center" }}>
-          NKJV Bible Memory Helper
-        </h3>
-        <span style={{ whiteSpace: "pre-line", color: "black" }}>
-        1. Enter a book and chapter to work on, e.g. James 1:1-5 <br />
-        2. Start typing from memory
-        <br />
-        <br />
-        Notes:
-        <br />
-        - The text changes color to grade success
-        <br />- Ignores most punctuation / capitalization
-        <br />- Press Enter key for help with current / next word
-        </span>
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            value={bibleRef}
-            onChange={(e) => setBibleRef(e.target.value)}
-            placeholder="Enter bible reference (e.g., JOHN 3:1-5)"
-            className="flex-grow p-2 border rounded text-black"
-          />
-          <select
-            value={translation}
-            onChange={(e) => setTranslation(e.target.value)}
-            className="p-2 border rounded bg-white text-black"
+    <main className="min-h-screen p-4 md:p-8 max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Remember Your Sword</h1>
+        <button
+          onClick={() => setIsDrawerOpen(true)}
+          className="p-2 rounded-lg hover:bg-gray-100"
+          aria-label="Open settings"
+        >
+          <svg
+            className="h-6 w-6 text-gray-600"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <option value="ESV">ESV</option>
-            <option value="KJV">KJV</option>
-            <option value="NKJV">NKJV</option>
-            <option value="NIV">NIV</option>
-            <option value="NASB">NASB</option>
-            <option value="NLT">NLT</option>
-            <option value="CSB">CSB</option>
-            <option value="ASV">ASV</option>
-            <option value="NRSV">NRSV</option>
-            <option value="RSV">RSV</option>
-          </select>
+            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <div className="flex gap-4">
+            <input
+              type="text"
+              value={bibleRef}
+              onChange={(e) => setBibleRef(e.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  fetchChapter();
+                }
+              }}
+              placeholder="Enter Bible reference (e.g., John 3:16)"
+              className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <select
+              value={translation}
+              onChange={(e) => setTranslation(e.target.value)}
+              className="w-32 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="ESV">ESV</option>
+              <option value="KJV">KJV</option>
+              <option value="NKJV">NKJV</option>
+              <option value="NIV">NIV</option>
+              <option value="NASB">NASB</option>
+              <option value="NLT">NLT</option>
+              <option value="CSB">CSB</option>
+              <option value="ASV">ASV</option>
+              <option value="NRSV">NRSV</option>
+              <option value="RSV">RSV</option>
+            </select>
+          </div>
           <button
             onClick={fetchChapter}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Load
+            Load Verse
           </button>
         </div>
 
-        {actualText && (
-            <>
+        {status !== "No text loaded." && (
+          <div className="space-y-4">
+            <div className="p-4 bg-gray-50 rounded-lg">
               <button
-                  onClick={populateActual}
-                  className="w-full p-2 mb-4 rounded bg-blue-500 text-white"
+                onClick={populateActual}
+                className="text-sm text-blue-600 hover:text-blue-700"
               >
-                See Full Text
+                Show Full Text
               </button>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="verseInput" className="block text-sm font-medium text-gray-700">
+                Type the verse from memory:
+              </label>
               <textarea
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      event.preventDefault();
-                      revertToActual(true);
-                    }
-                  }}
-                  value={userText}
-                  onChange={checkText}
-                  className="w-full py-2 px-2 mb-0 rounded border border-blue-300 text-black"
-                  placeholder="Type from memory..."
+                id="verseInput"
+                value={userText}
+                onChange={checkText}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    revertToActual(true);
+                  }
+                }}
+                placeholder="Start typing the verse..."
+                className="w-full h-32 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
-            </>
-        )}
+            </div>
 
-        <hr
-            style={{
-              border: "none",
-              height: "2px",
-              backgroundColor: "black",
-              marginTop: "8px",
-              marginBottom: "8px",
-            }}
-        />
-
-        {actualText && (
-            <>
-              <div className="space-x-1 overflow-auto max-h-64">
-                {cleanText(userText)
-                    .split(" ")
-                    .map((word, wordIndex) => {
-                      return (
-                          <span
-                              key={wordIndex}
-                              className={"inline-block " + colorWord(word, wordIndex)}
-                          >
-                    {word}
+            {userText && (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Your progress:
+                  <span className="ml-2 text-sm font-normal text-gray-500">
+                    (Green = correct, Red = incorrect)
                   </span>
-                      );
-                    })}
-                <div ref={endOfContentRef} />
+                </label>
+                <div className="p-4 bg-white border border-gray-200 rounded-lg">
+                  <div className="space-x-1 overflow-auto max-h-64">
+                    {cleanText(userText)
+                      .split(" ")
+                      .map((word, wordIndex) => (
+                        <span
+                          key={wordIndex}
+                          className={"inline-block " + colorWord(word, wordIndex)}
+                        >
+                          {word}
+                        </span>
+                      ))}
+                    <div ref={endOfContentRef} />
+                  </div>
+                </div>
               </div>
-            </>
+            )}
+
+            <div className="text-sm text-gray-600">
+              Status: {status}
+            </div>
+          </div>
         )}
-
-        <hr
-            style={{
-              border: "none",
-              height: "2px",
-              backgroundColor: "black",
-              marginTop: "8px",
-            }}
-        />
-        <div style={{ textAlign: "center", marginTop: "8px" }}>
-          <span style={{ color: "black" }}>{status}</span>
-        </div>
-
-        <hr
-            style={{
-              border: "none",
-              height: "2px",
-              backgroundColor: "black",
-              marginTop: "8px",
-            }}
-        />
-
-        <label style={{ color: "black" }}>
-          <input
-              type="checkbox"
-              checked={isCommuter}
-              onChange={handleCommuterChange}
-          />
-          {" "}Commuter
-        </label>
-        <span style={{ whiteSpace: "pre-line", color: "black" }}>
-        <br />Check the box if you're commuting to gain access to the following voice commands:
-        <br />- "memory go back" to undo a mistake
-        <br />- "memory help" to add the next word
-        </span>
       </div>
+
+      <Drawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+        <Settings
+          translation={translation}
+          setTranslation={setTranslation}
+          isCommuter={isCommuter}
+          setIsCommuter={setIsCommuter}
+        />
+      </Drawer>
+    </main>
   );
 };
 
