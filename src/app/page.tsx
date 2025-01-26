@@ -253,7 +253,7 @@ const Home = () => {
         let combinedText = combineVerses(data, reference.verses);
         const cleanedText = cleanText(combinedText);
         setActualText(cleanedText);
-        setStatus(`Text from ${bibleRef.toUpperCase()} (${translation}) loaded`);
+        setStatus("");
         // Focus the verse input after loading
         setTimeout(() => {
           verseInputRef.current?.focus();
@@ -571,7 +571,7 @@ const Home = () => {
             </div>
 
             <div className="text-base text-gray-600 flex items-center justify-between">
-              <div>Status: {status}</div>
+              <div>{status}</div>
               <a 
                 href="https://bolls.life/api/" 
                 target="_blank" 
