@@ -317,6 +317,22 @@ const Home = () => {
     return text.toLowerCase().trimStart().trimEnd();
   };
 
+  const calculateProgress = () => {
+    if (!actualText || !userText) return 0;
+    
+    const userWords = cleanText(userText).split(" ");
+    const actualWords = cleanText(actualText).split(" ");
+    let correctWords = 0;
+    
+    userWords.forEach((word, index) => {
+      if (index < actualWords.length && cleanText(word) === actualWords[index]) {
+        correctWords++;
+      }
+    });
+    
+    return Math.round((correctWords / actualWords.length) * 100);
+  };
+
   const endOfContentRef = React.useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     endOfContentRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -415,6 +431,19 @@ const Home = () => {
                   </button>
                 </div>
               </div>
+              {actualText && (
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-green-600 transition-all duration-300 ease-out rounded-full"
+                      style={{ width: `${calculateProgress()}%` }}
+                    />
+                  </div>
+                  <div className="text-sm text-gray-600 tabular-nums">
+                    {calculateProgress()}%
+                  </div>
+                </div>
+              )}
               <div className="relative">
                 <textarea
                   id="verseInput"
