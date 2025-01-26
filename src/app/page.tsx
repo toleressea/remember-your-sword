@@ -346,8 +346,8 @@ const Home = () => {
       </div>
 
       <div className="space-y-8">
-        <div className="space-y-3">
-          <div className="flex gap-4">
+        <div>
+          <div className="flex gap-3 items-stretch">
             <input
               type="text"
               value={bibleRef}
@@ -359,12 +359,12 @@ const Home = () => {
                 }
               }}
               placeholder="Enter Bible reference (e.g., John 3:16)"
-              className="flex-1 p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 p-3 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <select
               value={translation}
               onChange={(e) => setTranslation(e.target.value)}
-              className="w-32 p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className="w-28 p-3 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             >
               <option value="ESV">ESV</option>
               <option value="KJV">KJV</option>
@@ -377,30 +377,29 @@ const Home = () => {
               <option value="NRSV">NRSV</option>
               <option value="RSV">RSV</option>
             </select>
+            <button
+              onClick={fetchChapter}
+              className="px-6 bg-blue-600 text-white text-base rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
+            >
+              Load Verse
+            </button>
           </div>
-          <button
-            onClick={fetchChapter}
-            className="w-full bg-blue-600 text-white py-3 px-4 text-lg rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Load Verse
-          </button>
         </div>
 
         {status !== "No text loaded." && (
           <div className="space-y-6">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <button
-                onClick={populateActual}
-                className="text-base text-blue-600 hover:text-blue-700"
-              >
-                Show Full Text
-              </button>
-            </div>
-
             <div className="space-y-3">
-              <label htmlFor="verseInput" className="block text-base font-medium text-gray-700">
-                Type the verse from memory:
-              </label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="verseInput" className="text-base font-medium text-gray-700">
+                  Type the verse from memory:
+                </label>
+                <button
+                  onClick={populateActual}
+                  className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                >
+                  Show Full Text
+                </button>
+              </div>
               <div className="relative">
                 <textarea
                   id="verseInput"
