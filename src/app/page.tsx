@@ -118,6 +118,8 @@ const Home = () => {
   const [isCommuter, setIsCommuter] = useState<boolean>(false);
   const [translation, setTranslation] = useLocalStorage<string>('preferredTranslation', 'NKJV');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [mistakeCount, setMistakeCount] = useState(0);
+  const [lastCheckedLength, setLastCheckedLength] = useState(0);
   const [hasHydrated, setHasHydrated] = useState(false);
   const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
   const verseInputRef = useRef<HTMLTextAreaElement>(null);
@@ -224,8 +226,10 @@ const Home = () => {
 
   const fetchChapter = async () => {
     try {
-      // Clear the user text before loading new passage
+      // Clear the user text and mistake count before loading new passage
       setUserText("");
+      setMistakeCount(0);
+      setLastCheckedLength(0);
       
       const reference = parseVerseReference(bibleRef);
       if (!reference) {
@@ -311,6 +315,24 @@ const Home = () => {
     const newText = event.target.value;
     setUserText(newText);
 
+    // Only check for mistakes if we have actual text to compare against
+    if (actualText && newText.endsWith(" ")) {
+      const userWords = newText.trim().split(" ");
+      const actualWords = actualText.split(" ");
+      const lastUserWord = userWords[userWords.length - 1];
+      const actualWord = actualWords[userWords.length - 1];
+      
+      if (lastUserWord && actualWord) {
+        const cleanUserWord = cleanText(lastUserWord);
+        const cleanActualWord = cleanText(actualWord);
+        
+        // Count as mistake if words don't match at all
+        if (!cleanActualWord.startsWith(cleanUserWord) && !cleanUserWord.startsWith(cleanActualWord)) {
+          setMistakeCount(prev => prev + 1);
+        }
+      }
+    }
+
     // Synchronize scroll position
     const textarea = event.target;
     const overlay = textarea.nextElementSibling as HTMLElement;
@@ -352,6 +374,21 @@ const Home = () => {
       
       return { word, color };
     });
+  };
+
+  const getWordClass = (userWord: string, actualWord: string): string => {
+    if (!userWord) return '';
+    if (!actualWord) return 'text-red-500';
+    
+    const cleanUserWord = cleanText(userWord);
+    const cleanActualWord = cleanText(actualWord);
+    
+    if (cleanUserWord === cleanActualWord) {
+      return 'text-green-500';
+    } else if (cleanActualWord.startsWith(cleanUserWord) || cleanUserWord.startsWith(cleanActualWord)) {
+      return 'text-yellow-500';
+    }
+    return 'text-red-500';
   };
 
   const cleanText = (input: string) => {
@@ -478,15 +515,23 @@ const Home = () => {
                 </div>
               </div>
               {actualText && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-4">
                   <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-green-600 transition-all duration-300 ease-out rounded-full"
                       style={{ width: `${calculateProgress()}%` }}
                     />
                   </div>
-                  <div className="text-sm text-gray-600 tabular-nums">
-                    {calculateProgress()}%
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="text-gray-600 tabular-nums">
+                      {calculateProgress()}%
+                    </div>
+                    <div className="text-red-600 tabular-nums flex items-center gap-1" title="Number of mistakes">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      {mistakeCount}
+                    </div>
                   </div>
                 </div>
               )}
