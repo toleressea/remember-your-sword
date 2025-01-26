@@ -548,38 +548,38 @@ const Home = () => {
                 </div>
               )}
               <div className="relative">
-                <textarea
-                  id="verseInput"
-                  ref={verseInputRef}
-                  value={userText}
-                  onChange={checkText}
-                  onScroll={handleScroll}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      event.preventDefault();
-                      revertToActual(true);
-                    }
-                  }}
-                  placeholder="Start typing the verse..."
-                  className="w-full min-h-[10rem] max-h-[10rem] p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-transparent resize-none overflow-auto"
-                  style={{ caretColor: 'black', color: 'transparent' }}
-                />
-                <div 
-                  className="absolute top-0 left-0 right-0 p-4 text-base pointer-events-none whitespace-pre-wrap break-words overflow-hidden"
-                  style={{ 
-                    minHeight: '10rem',
-                    maxHeight: '10rem',
-                    overflowY: 'auto'
-                  }}
-                >
-                  {getColoredWords().map((item, index) => (
-                    <React.Fragment key={index}>
-                      <span className={item.color}>{item.word}</span>
-                      {index < getColoredWords().length - 1 && " "}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
+    <textarea
+       id="verseInput"
+       ref={verseInputRef}
+       value={userText}
+       onChange={checkText}
+       onScroll={handleScroll}
+       onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              revertToActual(true);
+            }
+        }}
+        placeholder="Start typing the verse..."
+        className="w-full min-h-[10rem] max-h-[10rem] p-3 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-transparent resize-none overflow-auto whitespace-pre-wrap break-words"
+        style={{ caretColor: 'black', color: 'transparent' }}
+    />
+    <div 
+        className="absolute top-0 left-0 right-0 p-3 text-base pointer-events-none whitespace-pre-wrap break-words overflow-hidden"
+        style={{ 
+            minHeight: '10rem',
+            maxHeight: '10rem',
+            overflowY: 'auto'
+        }}
+    >
+        {getColoredWords().map((item, index) => (
+            <React.Fragment key={index}>
+                <span className={item.color}>{item.word}</span>
+                {index < getColoredWords().length - 1 && " "}
+            </React.Fragment>
+        ))}
+    </div>
+</div>
             </div>
 
             <div className="text-base text-gray-600 flex items-center justify-between">
