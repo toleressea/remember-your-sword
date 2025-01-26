@@ -254,17 +254,35 @@ const Home = () => {
   }
 
   const checkText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setUserText(event.target.value);
+    const newText = event.target.value;
+    setUserText(newText);
   };
 
-  const colorWord = (word: string, index: number) => {
-    let actualWords = actualText.split(" ");
-    if (index >= actualWords.length) return "text-red-500";
-    return word.toLowerCase() === actualWords[index].toLowerCase()
-      ? "text-green-600"
-      : actualWords[index].toLowerCase().includes(word.toLowerCase())
-      ? "text-yellow-600"
-      : "text-red-500";
+  const getColoredWords = () => {
+    if (!actualText || !userText) return [];
+
+    const userWords = userText.split(" ");
+    const actualWords = cleanText(actualText).split(" ");
+    
+    return userWords.map((word, index) => {
+      let color = "text-gray-900";
+      const cleanedWord = cleanText(word);
+      
+      if (index < actualWords.length) {
+        const actualWord = actualWords[index];
+        if (cleanedWord === actualWord) {
+          color = "text-green-600"; // Exact match
+        } else if (actualWord.startsWith(cleanedWord)) {
+          color = "text-yellow-600"; // Partial match
+        } else {
+          color = "text-red-600"; // Wrong
+        }
+      } else {
+        color = "text-red-600"; // Extra words
+      }
+      
+      return { word, color };
+    });
   };
 
   const cleanText = (input: string) => {
@@ -365,46 +383,34 @@ const Home = () => {
               <label htmlFor="verseInput" className="block text-base font-medium text-gray-700">
                 Type the verse from memory:
               </label>
-              <textarea
-                id="verseInput"
-                value={userText}
-                onChange={checkText}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    event.preventDefault();
-                    revertToActual(true);
-                  }
-                }}
-                placeholder="Start typing the verse..."
-                className="w-full h-40 p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            {userText && (
-              <div className="space-y-3">
-                <label className="block text-base font-medium text-gray-700">
-                  Your progress:
-                  <span className="ml-2 text-base font-normal text-gray-500">
-                    (Green = correct, Red = incorrect)
-                  </span>
-                </label>
-                <div className="p-4 bg-white border border-gray-200 rounded-lg">
-                  <div className="space-x-1 overflow-auto max-h-64">
-                    {cleanText(userText)
-                      .split(" ")
-                      .map((word, wordIndex) => (
-                        <span
-                          key={wordIndex}
-                          className={"inline-block " + colorWord(word, wordIndex)}
-                        >
-                          {word}
-                        </span>
-                      ))}
-                    <div ref={endOfContentRef} />
-                  </div>
+              <div className="relative">
+                <textarea
+                  id="verseInput"
+                  value={userText}
+                  onChange={checkText}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      revertToActual(true);
+                    }
+                  }}
+                  placeholder="Start typing the verse..."
+                  className="w-full min-h-[10rem] p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-transparent resize-none"
+                  style={{ caretColor: 'black', color: 'transparent' }}
+                />
+                <div 
+                  className="absolute top-0 left-0 right-0 p-4 text-base pointer-events-none whitespace-pre-wrap break-words"
+                  style={{ minHeight: '10rem' }}
+                >
+                  {getColoredWords().map((item, index) => (
+                    <React.Fragment key={index}>
+                      <span className={item.color}>{item.word}</span>
+                      {index < getColoredWords().length - 1 && " "}
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
 
             <div className="text-base text-gray-600">
               Status: {status}
