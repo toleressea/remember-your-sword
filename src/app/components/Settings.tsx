@@ -1,15 +1,11 @@
 import React from 'react';
 
 interface SettingsProps {
-  translation: string;
-  setTranslation: (translation: string) => void;
   isCommuter: boolean;
   setIsCommuter: (isCommuter: boolean) => void;
 }
 
 const Settings: React.FC<SettingsProps> = ({
-  translation,
-  setTranslation,
   isCommuter,
   setIsCommuter,
 }) => {
@@ -18,20 +14,6 @@ const Settings: React.FC<SettingsProps> = ({
       <h2 className="text-xl font-semibold mb-4">Settings</h2>
       
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Bible Translation
-          </label>
-          <select
-            value={translation}
-            onChange={(e) => setTranslation(e.target.value)}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="ESV">English Standard Version (ESV)</option>
-            <option value="KJV">King James Version (KJV)</option>
-          </select>
-        </div>
-
         <div>
           <label className="flex items-center space-x-2">
             <input
