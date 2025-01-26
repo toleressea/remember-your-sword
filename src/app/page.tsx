@@ -391,7 +391,7 @@ const Home = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <label htmlFor="verseInput" className="text-base font-medium text-gray-700">
-                  Type the verse from memory:
+                  Enter the verse from memory:
                 </label>
                 <div className="space-x-4">
                   <button

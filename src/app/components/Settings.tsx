@@ -27,7 +27,7 @@ const Settings: React.FC<SettingsProps> = ({
             </span>
           </label>
           <p className="text-base text-gray-500 mt-2">
-            Type "memory help" to reveal text, "memory go back" to hide it
+            Speak "memory help" to reveal text, "memory go back" to hide it
           </p>
         </div>
       </div>
@@ -38,7 +38,7 @@ const Settings: React.FC<SettingsProps> = ({
           <p>1. Enter a Bible reference (e.g., "John 3:16" or "James 1:2-4")</p>
           <p>2. The verse will be displayed for you to memorize</p>
           <p>3. Type the verse in the input box to practice</p>
-          <p>4. For commuter mode, use the special commands above</p>
+          <p>4. For commuter mode, use your phone's speak-to-text and the special commands above for help</p>
         </div>
       </div>
     </div>
