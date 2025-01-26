@@ -599,8 +599,6 @@ const Home = () => {
 
       <Drawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
         <Settings
-          translation={translation}
-          setTranslation={setTranslation}
           isCommuter={isCommuter}
           setIsCommuter={setIsCommuter}
         />
