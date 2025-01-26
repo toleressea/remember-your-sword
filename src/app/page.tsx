@@ -177,6 +177,9 @@ const Home = () => {
 
   const fetchChapter = async () => {
     try {
+      // Clear the user text before loading new passage
+      setUserText("");
+      
       const reference = parseVerseReference(bibleRef);
       if (!reference) {
         setStatus("Please enter a valid reference (e.g., 'JOHN 3:1-5')");
