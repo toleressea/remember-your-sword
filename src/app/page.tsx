@@ -256,6 +256,21 @@ const Home = () => {
   const checkText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
     setUserText(newText);
+
+    // Synchronize scroll position
+    const textarea = event.target;
+    const overlay = textarea.nextElementSibling as HTMLElement;
+    if (overlay) {
+      overlay.scrollTop = textarea.scrollTop;
+    }
+  };
+
+  const handleScroll = (event: React.UIEvent<HTMLTextAreaElement>) => {
+    const textarea = event.target as HTMLTextAreaElement;
+    const overlay = textarea.nextElementSibling as HTMLElement;
+    if (overlay) {
+      overlay.scrollTop = textarea.scrollTop;
+    }
   };
 
   const getColoredWords = () => {
@@ -388,6 +403,7 @@ const Home = () => {
                   id="verseInput"
                   value={userText}
                   onChange={checkText}
+                  onScroll={handleScroll}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") {
                       event.preventDefault();
@@ -395,12 +411,16 @@ const Home = () => {
                     }
                   }}
                   placeholder="Start typing the verse..."
-                  className="w-full min-h-[10rem] p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-transparent resize-none"
+                  className="w-full min-h-[10rem] max-h-[10rem] p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-transparent resize-none overflow-auto"
                   style={{ caretColor: 'black', color: 'transparent' }}
                 />
                 <div 
-                  className="absolute top-0 left-0 right-0 p-4 text-base pointer-events-none whitespace-pre-wrap break-words"
-                  style={{ minHeight: '10rem' }}
+                  className="absolute top-0 left-0 right-0 p-4 text-base pointer-events-none whitespace-pre-wrap break-words overflow-hidden"
+                  style={{ 
+                    minHeight: '10rem',
+                    maxHeight: '10rem',
+                    overflowY: 'auto'
+                  }}
                 >
                   {getColoredWords().map((item, index) => (
                     <React.Fragment key={index}>
