@@ -82,7 +82,7 @@ const Home = () => {
   const [status, setStatus] = useState<string>("No text loaded.");
   const [userText, setUserText] = useState<string>("");
   const [isCommuter, setIsCommuter] = useState<boolean>(false);
-  const [translation, setTranslation] = useState<string>("ESV");
+  const [translation, setTranslation] = useState<string>("NKJV");
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
 
