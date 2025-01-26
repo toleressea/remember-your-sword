@@ -288,14 +288,14 @@ const Home = () => {
   return (
     <main className="min-h-screen p-4 md:p-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Remember Your Sword</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Remember Your Sword</h1>
         <button
           onClick={() => setIsDrawerOpen(true)}
-          className="p-2 rounded-lg hover:bg-gray-100"
+          className="p-3 rounded-lg hover:bg-gray-100"
           aria-label="Open settings"
         >
           <svg
-            className="h-6 w-6 text-gray-600"
+            className="h-7 w-7 text-gray-600"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -309,8 +309,8 @@ const Home = () => {
         </button>
       </div>
 
-      <div className="space-y-6">
-        <div className="space-y-2">
+      <div className="space-y-8">
+        <div className="space-y-3">
           <div className="flex gap-4">
             <input
               type="text"
@@ -323,12 +323,12 @@ const Home = () => {
                 }
               }}
               placeholder="Enter Bible reference (e.g., John 3:16)"
-              className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <select
               value={translation}
               onChange={(e) => setTranslation(e.target.value)}
-              className="w-32 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className="w-32 p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             >
               <option value="ESV">ESV</option>
               <option value="KJV">KJV</option>
@@ -344,25 +344,25 @@ const Home = () => {
           </div>
           <button
             onClick={fetchChapter}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+            className="w-full bg-blue-600 text-white py-3 px-4 text-lg rounded-lg hover:bg-blue-700 transition-colors"
           >
             Load Verse
           </button>
         </div>
 
         {status !== "No text loaded." && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="p-4 bg-gray-50 rounded-lg">
               <button
                 onClick={populateActual}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-base text-blue-600 hover:text-blue-700"
               >
                 Show Full Text
               </button>
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="verseInput" className="block text-sm font-medium text-gray-700">
+            <div className="space-y-3">
+              <label htmlFor="verseInput" className="block text-base font-medium text-gray-700">
                 Type the verse from memory:
               </label>
               <textarea
@@ -376,15 +376,15 @@ const Home = () => {
                   }
                 }}
                 placeholder="Start typing the verse..."
-                className="w-full h-32 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full h-40 p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             {userText && (
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="space-y-3">
+                <label className="block text-base font-medium text-gray-700">
                   Your progress:
-                  <span className="ml-2 text-sm font-normal text-gray-500">
+                  <span className="ml-2 text-base font-normal text-gray-500">
                     (Green = correct, Red = incorrect)
                   </span>
                 </label>
@@ -406,7 +406,7 @@ const Home = () => {
               </div>
             )}
 
-            <div className="text-sm text-gray-600">
+            <div className="text-base text-gray-600">
               Status: {status}
             </div>
           </div>
