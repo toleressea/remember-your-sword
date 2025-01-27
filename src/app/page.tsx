@@ -229,6 +229,7 @@ const Home = () => {
       // Clear the user text and mistake count before loading new passage
       setUserText("");
       setMistakeCount(0);
+      setHelpCounter(0);
       
       const reference = parseVerseReference(bibleRef);
       if (!reference) {
