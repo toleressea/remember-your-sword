@@ -3,19 +3,63 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 51, 51, 51;
-  --background-start-rgb: 250, 250, 250;
-  --background-end-rgb: 255, 255, 255;
+  --primary-color: #3490dc; /* Blue */
+  --secondary-color: #ffed4a; /* Yellow */
+  --success-color: #38c172; /* Green */
+  --danger-color: #e3342f; /* Red */
+  --text-color: #333; /* Dark Gray */
+  --border-color: #ccc; /* Light Gray */
+}
+
+input, textarea {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+textarea {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, textarea:focus, button:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+textarea:focus {
+    border-color: inherit;
+    box-shadow: 0 0 0 4px inherit, 0 0 0 4px rgba(52, 144, 220, 0.2);
+    outline: none;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: var(--text-color);
   background: linear-gradient(
     to bottom,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
+    rgb(250, 250, 250),
+    rgb(255, 255, 255)
   );
   min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+  input, textarea, button {
+    font-size: 14px;
+    padding: 8px;
+  }
 }
 
 @layer utilities {
@@ -47,10 +91,4 @@ body {
 /* Smooth transitions */
 * {
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-}
-
-textarea:focus {
-    border-color: inherit;
-    box-shadow: none;
-    outline: none;
 }

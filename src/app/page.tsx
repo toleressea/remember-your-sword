@@ -529,7 +529,7 @@ const Home = () => {
                     }}
                     placeholder="Start typing the verse..."
                     className="w-full min-h-[10rem] max-h-[10rem] p-3 text-base rounded-lg shadow-sm bg-transparent resize-none overflow-auto whitespace-pre-wrap break-words"
-                    style={{ caretColor: 'black', color: 'black', border: `1px solid ${getBorderColor()}`}} 
+                    style={{ caretColor: 'black', color: 'black', boxShadow: `0 0 0 2px ${getBorderColor()}`}} 
                 />
               </div>
             </div>
