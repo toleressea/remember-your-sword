@@ -459,7 +459,7 @@ const Home = () => {
               onClick={fetchChapter}
               className="px-6 bg-blue-600 text-white text-base rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
-              Load Verse
+              Load
             </button>
           </div>
         </div>

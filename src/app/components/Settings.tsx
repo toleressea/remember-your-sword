@@ -35,10 +35,9 @@ const Settings: React.FC<SettingsProps> = ({
       <div className="mt-8">
         <h3 className="text-xl font-medium mb-4">How to Use</h3>
         <div className="space-y-3 text-base text-gray-600">
-          <p>1. Enter a Bible reference (e.g., "John 3:16" or "James 1:2-4")</p>
-          <p>2. The verse will be displayed for you to memorize</p>
-          <p>3. Type the verse in the input box to practice</p>
-          <p>4. For commuter mode, use your phone's speak-to-text and the special commands above for help</p>
+          <p>1. Enter a Bible reference (e.g., "Romans 1", "John 3:16", or "James 1:2-4")</p>
+          <p>2. Type the verse in the input box to practice</p>
+          <p>3. For commuter mode, use your phone's speak-to-text and the special commands above for help</p>
         </div>
       </div>
     </div>
