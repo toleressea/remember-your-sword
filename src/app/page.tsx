@@ -119,7 +119,6 @@ const Home = () => {
   const [translation, setTranslation] = useLocalStorage<string>('preferredTranslation', 'NKJV');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [mistakeCount, setMistakeCount] = useState(0);
-  const [lastCheckedLength, setLastCheckedLength] = useState(0);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [helpCounter, setHelpCounter] = useState(0);
   const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
@@ -230,7 +229,6 @@ const Home = () => {
       // Clear the user text and mistake count before loading new passage
       setUserText("");
       setMistakeCount(0);
-      setLastCheckedLength(0);
       
       const reference = parseVerseReference(bibleRef);
       if (!reference) {
@@ -355,46 +353,15 @@ const Home = () => {
     }
   };
 
-  const getColoredWords = () => {
-    if (!actualText || !userText) return [];
+  const getBorderColor = () => {
+    if (!actualText || !userText) return "gray";
 
-    const userWords = userText.split(" ");
-    const actualWords = cleanText(actualText).split(" ");
-    
-    return userWords.map((word, index) => {
-      let color = "text-gray-900";
-      const cleanedWord = cleanText(word);
-      
-      if (index < actualWords.length) {
-        const actualWord = actualWords[index];
-        if (cleanedWord === actualWord) {
-          color = "text-green-600"; // Exact match
-        } else if (actualWord.startsWith(cleanedWord)) {
-          color = "text-yellow-600"; // Partial match
-        } else {
-          color = "text-red-600"; // Wrong
-        }
-      } else {
-        color = "text-red-600"; // Extra words
-      }
-      
-      return { word, color };
-    });
-  };
-
-  const getWordClass = (userWord: string, actualWord: string): string => {
-    if (!userWord) return '';
-    if (!actualWord) return 'text-red-500';
-    
-    const cleanUserWord = cleanText(userWord);
-    const cleanActualWord = cleanText(actualWord);
-    
-    if (cleanUserWord === cleanActualWord) {
-      return 'text-green-500';
-    } else if (cleanActualWord.startsWith(cleanUserWord) || cleanUserWord.startsWith(cleanActualWord)) {
-      return 'text-yellow-500';
+    const cleanedUserText = cleanText(userText);
+    if (actualText.startsWith(cleanedUserText)) {
+      return "green";
+    } else {
+      return "red";
     }
-    return 'text-red-500';
   };
 
   const cleanText = (input: string) => {
@@ -548,38 +515,23 @@ const Home = () => {
                 </div>
               )}
               <div className="relative">
-    <textarea
-       id="verseInput"
-       ref={verseInputRef}
-       value={userText}
-       onChange={checkText}
-       onScroll={handleScroll}
-       onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              revertToActual(true);
-            }
-        }}
-        placeholder="Start typing the verse..."
-        className="w-full min-h-[10rem] max-h-[10rem] p-3 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-transparent resize-none overflow-auto whitespace-pre-wrap break-words"
-        style={{ caretColor: 'black', color: 'transparent' }}
-    />
-    <div 
-        className="absolute top-0 left-0 right-0 p-3 text-base pointer-events-none whitespace-pre-wrap break-words overflow-hidden"
-        style={{ 
-            minHeight: '10rem',
-            maxHeight: '10rem',
-            overflowY: 'auto'
-        }}
-    >
-        {getColoredWords().map((item, index) => (
-            <React.Fragment key={index}>
-                <span className={item.color}>{item.word}</span>
-                {userText && index < userText.split(" ").length - 1 && " "}
-            </React.Fragment>
-        ))}
-    </div>
-</div>
+                <textarea
+                  id="verseInput"
+                  ref={verseInputRef}
+                  value={userText}
+                  onChange={checkText}
+                  onScroll={handleScroll}
+                  onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          revertToActual(true);
+                        }
+                    }}
+                    placeholder="Start typing the verse..."
+                    className="w-full min-h-[10rem] max-h-[10rem] p-3 text-base rounded-lg shadow-sm bg-transparent resize-none overflow-auto whitespace-pre-wrap break-words"
+                    style={{ caretColor: 'black', color: 'black', border: `1px solid ${getBorderColor()}`}} 
+                />
+              </div>
             </div>
 
             <div className="text-base text-gray-600 flex items-center justify-between">
