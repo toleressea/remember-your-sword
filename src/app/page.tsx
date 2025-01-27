@@ -395,10 +395,6 @@ const Home = () => {
     endOfContentRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [userText]);
 
-  const handleCommuterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsCommuter(event.target.checked);
-  };
-
   return (
     <main className="min-h-screen p-4 md:p-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-8">
@@ -478,7 +474,7 @@ const Home = () => {
                     title="Press Enter for the next word"
                   >
                     Help Me
-                    <span className="text-gray-500 text-xs border border-gray-300 rounded px-1">⏎</span>
+                    <img src="/help.svg" alt="Help Icon" className="w-4 h-4 text-blue-600 hover:text-blue-700" />
                   </button>
                   <button
                     onClick={populateActual}
@@ -507,9 +503,7 @@ const Home = () => {
                       {mistakeCount}
                     </div>
                     <div className="text-blue-600 tabular-nums flex items-center gap-1" title="Number of times help was used">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-4.42-2.79-8.59-7-9.719z" />
-                      </svg>
+                      <img src="/help.svg" alt="Help Icon" className="w-4 h-4 text-blue-600 hover:text-blue-700" />
                       {helpCounter}
                     </div>
                   </div>
