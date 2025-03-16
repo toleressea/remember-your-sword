@@ -10,23 +10,17 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 Install `npm` and the necessary packages via `npm install`
 
-First, run the development server:
+To test locally:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-### Via Docker
+To run in production:
 
 ```bash
-docker build -t remember-your-sword:latest .
-docker run --rm -p 8001:8001 remember-your-sword:latest
+npm run build
+npm run start
 ```
 
 ## Usage
