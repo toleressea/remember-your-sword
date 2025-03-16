@@ -370,6 +370,7 @@ const Home = () => {
     text = text
       .replace(filterChars, "")
       .replace(/—/g, " ")
+      .replace('’', "'")
       .replace(/\s{2,}/g, " ");
     return text.toLowerCase().trimStart().trimEnd();
   };
