@@ -64,6 +64,17 @@ const filterVerses = (verses: BibleVerse[], selectedVerses: number[]): BibleVers
   return verses.filter(verse => selectedVerses.includes(verse.verse));
 };
 
+
+const cleanText = (input: string) => {
+  let text = input.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
+  text = text
+    .replace(/[.,\/#!?“”$%\^&\*;:{}=_`~()]/g, "") // Strip characters we know we don't want
+    .replace(/—/g, " ") // Replace hyphens with spaces
+    .replace('’', "'") // Replace unicode apostrophe with regular ascii
+    .replace(/\s{2,}/g, " ");
+  return text.toLowerCase().trimStart().trimEnd();
+};
+
 const combineVerses = (verses: BibleVerse[], selectedVerses?: number[]): string => {
   let versesToProcess = verses;
   if (selectedVerses && selectedVerses.length > 0) {
@@ -72,7 +83,7 @@ const combineVerses = (verses: BibleVerse[], selectedVerses?: number[]): string 
   
   return versesToProcess
     .sort((a, b) => a.verse - b.verse)
-    .map(verse => verse.text.replace(/<[^>]*>/g, ''))
+    .map(verse => cleanText(verse.text))
     .join(' ');
 };
 
@@ -121,7 +132,6 @@ const Home = () => {
   const [mistakeCount, setMistakeCount] = useState(0);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [helpCounter, setHelpCounter] = useState(0);
-  const filterChars = /[.,\/#!?“”$%\^&\*;:{}=_`~()]/g;
   const verseInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Handle hydration and localStorage
@@ -251,8 +261,7 @@ const Home = () => {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
         let combinedText = combineVerses(data, reference.verses);
-        const cleanedText = cleanText(combinedText);
-        setActualText(cleanedText);
+        setActualText(combinedText);
         setStatus("");
         // Focus the verse input after loading
         setTimeout(() => {
@@ -280,7 +289,7 @@ const Home = () => {
     }
 
     // split the current response into words
-    const actualWords = cleanText(actualText).split(" ");
+    const actualWords = actualText.split(" ");
     
     // Only show help if we haven't completed the verse
     if (userText) {
@@ -329,7 +338,7 @@ const Home = () => {
       
       if (lastUserWord && actualWord) {
         const cleanUserWord = cleanText(lastUserWord);
-        const cleanActualWord = cleanText(actualWord);
+        const cleanActualWord = actualWord;
         
         // Count as mistake if words don't match at all
         if (!cleanActualWord.startsWith(cleanUserWord) && !cleanUserWord.startsWith(cleanActualWord)) {
@@ -363,16 +372,6 @@ const Home = () => {
     } else {
       return "red";
     }
-  };
-
-  const cleanText = (input: string) => {
-    let text = input.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
-    text = text
-      .replace(filterChars, "")
-      .replace(/—/g, " ")
-      .replace('’', "'")
-      .replace(/\s{2,}/g, " ");
-    return text.toLowerCase().trimStart().trimEnd();
   };
 
   const calculateProgress = () => {
