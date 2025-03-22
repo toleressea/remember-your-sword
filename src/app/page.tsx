@@ -70,7 +70,7 @@ const cleanText = (input: string) => {
   text = text
     .replace(/[.,\/#!?“”$%\^&\*;:{}=_`~()]/g, "") // Strip characters we know we don't want
     .replace(/—/g, " ") // Replace hyphens with spaces
-    .replace('’', "'") // Replace unicode apostrophe with regular ascii
+    .replace(/’/g, "'") // Replace unicode apostrophe with regular ascii
     .replace(/\s{2,}/g, " ");
   return text.toLowerCase().trimStart().trimEnd();
 };
